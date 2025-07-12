@@ -1,0 +1,51 @@
+{% extends '_layout.html' %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+
+<div class="container py-4">
+  <div class="row">
+    <div class="col-md-6">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" class="img-fluid rounded shadow" alt="{{ product.name }}">
+      {% else %}
+        <img src="{% static 'img/no-image.png' %}" class="img-fluid rounded shadow" alt="No image">
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      <h2 class="fw-bold mb-3">{{ product.brand }} {{ product.model }}</h2>
+      <ul class="list-group mb-3">
+        <li class="list-group-item"><strong>Ціна:</strong> {{ product.price|floatformat:2 }} ₴</li>
+        <li class="list-group-item"><strong>Колір:</strong> {{ product.color|default:"—" }}</li>
+        <li class="list-group-item"><strong>Рік:</strong> {{ product.year|default:"—" }}</li>
+        <li class="list-group-item"><strong>Категорія:</strong> {{ product.category|default:"—" }}</li>
+        <li class="list-group-item"><strong>Витрата пального:</strong> {{ product.consumption|default:"—" }} л/100км</li>
+        <li class="list-group-item"><strong>Опис:</strong> {{ product.description|default:"—" }}</li>
+      </ul>
+
+      <div class="d-grid gap-2">
+        <a href="/cart/add/{{ product.id }}" class="btn btn-primary">{% trans "🛒 Додати в кошик" %}</a>
+        <a href="{% url 'booking_dates' product.id %}" class="btn btn-outline-info">{% trans "📅 Переглянути заброньовані дати" %}</a>
+        <a href="{% url 'book_car' product.id %}" class="btn btn-success">{% trans "✅ Забронювати авто" %}</a>
+
+
+      <form method="post" action="{% url 'toggle_favorite' product.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger">
+        {% if is_favorite %}
+          ❤️ Улюблене
+        {% else %}
+          🤍 Додати в улюблене
+        {% endif %}
+      </button>
+      </form>
+
+
+        <a href="/list" class="btn btn-secondary mt-2">⬅ Назад</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

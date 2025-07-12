@@ -1,0 +1,45 @@
+{% extends '_layout.html' %}
+{% load static %}
+
+{% block content %}
+  <h2 class="text-center mb-4">Вибрані товари</h2>
+
+  {% if products %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for product in products %}
+        <div class="col">
+          <div class="card h-100 shadow-sm">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            {% else %}
+              <img src="{% static 'img/no-image.png' %}" class="card-img-top" alt="{{ product.name }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">
+                <strong>Ціна:</strong> {{ product.price }} ₴<br>
+                <strong>Категорія:</strong> {{ product.category }}<br>
+                <strong>Опис:</strong> {{ product.description|default:"—" }}
+              </p>
+            </div>
+            <div class="card-footer text-center">
+              <a href="{% url 'product_detail' product.id %}" class="btn btn-info">Детальніше</a>
+              <form method="post" action="{% url 'toggle_favorite' product.id %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger mt-2">
+                  {% if product.id in request.session.favorite_products %}
+                    ❤️ Улюблене
+                  {% else %}
+                    🤍 Додати в улюблене
+                  {% endif %}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center">У вас немає вибраних товарів.</p>
+  {% endif %}
+{% endblock %}

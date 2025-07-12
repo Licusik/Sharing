@@ -1,0 +1,97 @@
+{% extends '_layout.html' %}
+{% block content %}
+
+<div class="container my-5">
+  <div class="mx-auto" style="max-width: 680px;">
+    <div class="bg-white border-start border-4 border-primary rounded shadow p-4">
+
+      <div class="mb-4 pb-2 border-bottom">
+        <h4 class="text-dark fw-bold mb-1 d-flex align-items-center">
+          <i class="bi bi-car-front-fill me-2 text-primary"></i> Створення нового авто
+        </h4>
+        <span class="text-muted small">Будь ласка, заповніть усі обовʼязкові поля</span>
+      </div>
+
+      <form method="post" enctype="multipart/form-data" class="px-1">
+        {% csrf_token %}
+
+        <div class="row g-4">
+          <div class="col-md-6">
+            <label class="form-label">Бренд</label>
+            <input type="text" name="brand" class="form-control"
+                   value="{{ form.brand.value|default_if_none:'' }}">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Модель</label>
+            <input type="text" name="model" class="form-control"
+                   value="{{ form.model.value|default_if_none:'' }}">
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Ціна за день</label>
+            <input type="number" name="price" step="0.01" class="form-control"
+                   value="{{ form.price.value|default_if_none:'' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Кількість</label>
+            <input type="number" name="stock" min="0" class="form-control"
+                   value="{{ form.stock.value|default_if_none:'0' }}">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Рік</label>
+            <input type="number" name="year" class="form-control"
+                   value="{{ form.year.value|default_if_none:'' }}">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Витрата (л/100км)</label>
+            <input type="number" step="0.1" name="consumption" class="form-control"
+                   value="{{ form.consumption.value|default_if_none:'' }}">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Колір</label>
+            <input type="text" name="color" class="form-control"
+                   value="{{ form.color.value|default_if_none:'' }}">
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">Опис</label>
+            <textarea name="description" rows="3" class="form-control">{{ form.description.value|default_if_none:'' }}</textarea>
+          </div>
+
+          <div class="col-md-12">
+            <label class="form-label">Зображення</label>
+            <input type="file" name="image" class="form-control">
+          </div>
+           <div class="col-md-6">
+                <label class="form-label">Категорія</label>
+                    <select name="category" class="form-select">
+                    <option value="sedan" {% if form.category.value == 'sedan' %}selected{% endif %}>Sedan</option>
+                    <option value="suv" {% if form.category.value == 'suv' %}selected{% endif %}>SUV</option>
+                    <option value="coupe" {% if form.category.value == 'coupe' %}selected{% endif %}>Coupe</option>
+                    <option value="electric" {% if form.category.value == 'electric' %}selected{% endif %}>Electric</option>
+                </select>
+            </div>
+
+
+        <div class="col-md-12">
+            <div class="form-check form-switch mt-2">
+              <input class="form-check-input" type="checkbox" name="available"
+                     {% if form.available.value %}checked{% endif %}>
+              <label class="form-check-label">Доступний для замовлення</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+          <a href="/list" class="btn btn-outline-secondary w-50 me-2">Назад</a>
+          <button type="submit" class="btn btn-primary w-50">Додати авто</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}

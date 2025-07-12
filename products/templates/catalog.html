@@ -1,0 +1,108 @@
+{% extends '_layout.html' %}
+{% block content %}
+
+<!-- Кнопки фільтра -->
+<div class="d-flex gap-2 flex-wrap mb-3">
+  <button class="btn btn-outline-primary btn-filter active" data-category="all">All</button>
+  <button class="btn btn-outline-secondary btn-filter" data-category="sedan">Sedan</button>
+  <button class="btn btn-outline-secondary btn-filter" data-category="suv">SUV</button>
+  <button class="btn btn-outline-secondary btn-filter" data-category="coupe">Coupe</button>
+  <button class="btn btn-outline-secondary btn-filter" data-category="electric">Electric</button>
+</div>
+
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Каталог товарів</h2>
+  </div>
+
+  {% if products %}
+  <table class="table table-hover align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>#</th>
+        <th>Фото</th>
+        <th>Назва</th>
+        <th>Ціна</th>
+        <th>Кількість</th>
+        <th>Колір</th>
+        <th>Рік</th>
+        <th>Дії</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in products %}
+      <tr class="car-card" data-category="{{ i.category }}">
+        <td>{{ i.id }}</td>
+        <td>
+          {% if i.image %}
+          <img src="{{ i.image.url }}" height="60" alt="{{ i.name }}">
+          {% else %}
+          <img src="https://png.pngtree.com/png-vector/20221125/ourmid/pngtree-no-image-available-icon-flatvector-illustration-picture-coming-creative-vector-png-image_40968940.jpg"
+               height="60" alt="No image">
+          {% endif %}
+        </td>
+        <td>{{ i.brand }} {{ i.model }}</td>
+        <td>{{ i.price }} ₴</td>
+        <td>{{ i.stock }}</td>
+        <td>{{ i.color|default:"—" }}</td>
+        <td>{{ i.year|default:"—" }}</td>
+        <td class="d-flex gap-1 flex-wrap">
+          <a href="/cart/add/{{ i.id }}" class="btn btn-sm btn-dark">Add to Cart</a>
+          <a href="{% url 'product_detail' i.id %}" class="btn btn-outline-secondary btn-sm mt-2">Детальна інформація</a>
+          <a href="{% url 'book_car' i.id %}" class="btn btn-outline-success btn-sm mt-2">Орендувати</a>
+          <a href="{% url 'booking_dates' i.id %}" class="btn btn-outline-info btn-sm mt-2">Заброньовані дати</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <nav class="d-flex justify-content-center mt-3">
+    <ul class="pagination">
+      {% if page.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+      {% endif %}
+
+      {% for num in page.paginator.page_range %}
+      {% if page.number == num %}
+      <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% endif %}
+      {% endfor %}
+
+      {% if page.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}">&raquo;</a></li>
+      {% else %}
+      <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <p class="text-center mt-2">Показано {{ page.start_index }}–{{ page.end_index }} з {{ total_count }}</p>
+
+  {% else %}
+  <div class="alert alert-warning text-center">Немає жодного товару.</div>
+  {% endif %}
+</div>
+
+<script>
+  document.querySelectorAll('.btn-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const category = btn.dataset.category;
+
+      document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('.car-card').forEach(row => {
+        const match = category === 'all' || row.dataset.category === category;
+        row.classList.toggle('d-none', !match);
+      });
+    });
+  });
+</script>
+
+{% endblock %}

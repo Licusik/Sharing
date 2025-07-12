@@ -1,0 +1,25 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+<h1>User Cart</h1>
+
+<ul class="list-group">
+    {% for i in products %}
+    <li class="list-group-item">{{i.name}} - {{i.price}}$</li>
+    {% endfor %}
+</ul>
+{% if products|length == 0 %}
+<p>Your cart is empty!</p>
+<div>
+    <a href="/list" class="btn btn-primary mt-3">Continue Shoping</a>
+</div>
+{% else %}
+<p class="text-center mt-2">Total: {{ total }}$</p>
+<div class="text-center">
+    <a href="/orders/confirm/" class="btn btn-success mt-3">Confirm</a>
+</div>
+<div class="text-center">
+    <a href="clear/" class="btn btn-outline-secondary mt-3">Clear</a>
+</div>
+{% endif %}
+{% endblock %}

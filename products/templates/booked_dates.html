@@ -1,0 +1,39 @@
+{% extends '_layout.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Заброньовані дати</h4>
+        </div>
+        <div class="card-body p-4">
+            {% if bookings %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Дата початку</th>
+                            <th>Дата завершення</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.date_from }}</td>
+                            <td>{{ booking.date_to }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">Немає бронювань для цього автомобіля.</p>
+            {% endif %}
+
+            <div class="text-end mt-4">
+                <a href="/" class="btn btn-secondary">⬅ Назад</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
